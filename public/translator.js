@@ -24,21 +24,21 @@
     .then(data => { TRANSLATIONS = data || {}; })
     .catch(() => {});
 
-  const browserCache = {};
-  function getBrowserCache(lang) {
-    if (!browserCache[lang]) {
+  const sessionCache = {};
+  function getSessionCache(lang) {
+    if (!sessionCache[lang]) {
       try {
-        browserCache[lang] = JSON.parse(localStorage.getItem('translations_' + lang)) || {};
+        sessionCache[lang] = JSON.parse(sessionStorage.getItem('translations_' + lang)) || {};
       } catch (e) {
-        browserCache[lang] = {};
+        sessionCache[lang] = {};
       }
     }
-    return browserCache[lang];
+    return sessionCache[lang];
   }
 
-  function saveBrowserCache(lang) {
+  function saveSessionCache(lang) {
     try {
-      localStorage.setItem('translations_' + lang, JSON.stringify(browserCache[lang]));
+      sessionStorage.setItem('translations_' + lang, JSON.stringify(sessionCache[lang]));
     } catch (e) {}
   }
 
@@ -163,14 +163,14 @@
     const out = new Array(phrases.length);
     const missing = [];
     const missingIdx = [];
-    const localStore = getBrowserCache(lang);
+    const sessionStore = getSessionCache(lang);
     let cache = TRANSLATIONS[lang];
     if (!cache) cache = TRANSLATIONS[lang] = {};
 
     for (let i = 0; i < phrases.length; i++) {
       const p = phrases[i];
-      if (localStore[p] != null) {
-        out[i] = localStore[p];
+      if (sessionStore[p] != null) {
+        out[i] = sessionStore[p];
       } else if (cache[p] != null) {
         out[i] = cache[p];
       } else {
@@ -186,9 +186,9 @@
         const val = translated[i];
         out[missingIdx[i]] = val;
         cache[phrase] = val;
-        localStore[phrase] = val;
+        sessionStore[phrase] = val;
       }
-      saveBrowserCache(lang);
+      saveSessionCache(lang);
     }
 
     return out;
