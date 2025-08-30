@@ -2,12 +2,23 @@
   "name": "languagetranslationpoc",
   "version": "1.0.0",
   "description": "Demo bank app with translation toggle",
-  "main": "server.js",
+  "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "echo 'No tests'"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.22.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.0",
+    "vite": "^5.0.0"
+  }
 }
