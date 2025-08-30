@@ -140,7 +140,16 @@
     let textNodes = collectTextNodes(document.body, CONFIG.SKIP_SELECTORS);
     if (CONFIG.VISIBLE_ONLY) textNodes = textNodes.filter(n => isVisible(n.parentElement));
 
-    const textItems = textNodes.map(node => ({ kind: "text", node, value: node.nodeValue }));
+    const textItems = textNodes.map(node => {
+      const raw = node.nodeValue;
+      return {
+        kind: "text",
+        node,
+        value: raw.trim(),
+        leading: raw.match(/^\s*/)[0],
+        trailing: raw.match(/\s*$/)[0]
+      };
+    });
     const attrItems = collectPseudoAttrItems(document, CONFIG.PSEUDO_ATTRS);
     const allItems = [...textItems, ...attrItems];
     if (!allItems.length) return;
@@ -149,7 +158,8 @@
     for (const it of allItems) {
       const src = it.kind === "text" ? it.node.nodeValue : it.value;
       if (it.kind === "text" && seen.get(it.node) === src) continue;
-      inputs.push(src); refs.push(it);
+      inputs.push(it.value);
+      refs.push(it);
     }
     if (!inputs.length) return;
 
@@ -165,8 +175,9 @@
           if (val == null) continue;
           if (ref.kind === "text") {
             if (ref.node && ref.node.isConnected) {
-              ref.node.nodeValue = val;
-              seen.set(ref.node, val);
+              const translated = val.trim();
+              ref.node.nodeValue = (ref.leading || "") + translated + (ref.trailing || "");
+              seen.set(ref.node, ref.node.nodeValue);
             }
           } else if (ref.el && ref.el.setAttribute) {
             ref.el.setAttribute(ref.attr, val);
