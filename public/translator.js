@@ -5,7 +5,7 @@
     DEFAULT_LANG: "fr",
     BATCH_SIZE: 80,
     MAX_RETRIES: 1,
-    VISIBLE_ONLY: true,
+    VISIBLE_ONLY: false,
     SKIP_SELECTORS: ["[data-no-translate]", ".no-l10n"],
     PSEUDO_ATTRS: ["data-i18n-before", "data-i18n-after"]
   };
