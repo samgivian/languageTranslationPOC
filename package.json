@@ -1,0 +1,13 @@
+{
+  "name": "languagetranslationpoc",
+  "version": "1.0.0",
+  "description": "Demo bank app with translation toggle",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
