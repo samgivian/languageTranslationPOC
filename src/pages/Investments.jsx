@@ -1,4 +1,4 @@
-import generateContent from '../utils/generateContent.js';
+import generateContent from '../utils/generateContent.jsx';
 
 export default function Investments() {
   return (
