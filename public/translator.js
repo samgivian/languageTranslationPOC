@@ -18,6 +18,12 @@
   const seen = new WeakMap();
   let translateQueued = false;
 
+  let TRANSLATIONS = {};
+  const translationsReady = fetch('/translations.json')
+    .then(r => r.ok ? r.json() : {})
+    .then(data => { TRANSLATIONS = data || {}; })
+    .catch(() => {});
+
   function setHtmlLanguage(code) {
     const rtl = ["ar","he","fa","ur"].includes(code);
     const html = document.documentElement;
@@ -134,6 +140,35 @@
     return phrases;
   }
 
+  async function translateBatch(phrases, lang) {
+    await translationsReady;
+    const out = new Array(phrases.length);
+    const missing = [];
+    const missingIdx = [];
+    const cache = TRANSLATIONS[lang] || {};
+
+    for (let i = 0; i < phrases.length; i++) {
+      const p = phrases[i];
+      if (cache[p] != null) {
+        out[i] = cache[p];
+      } else {
+        missing.push(p);
+        missingIdx.push(i);
+      }
+    }
+
+    if (missing.length) {
+      const translated = await geminiTranslate(missing, lang);
+      if (!TRANSLATIONS[lang]) TRANSLATIONS[lang] = {};
+      for (let i = 0; i < missing.length; i++) {
+        out[missingIdx[i]] = translated[i];
+        TRANSLATIONS[lang][missing[i]] = translated[i];
+      }
+    }
+
+    return out;
+  }
+
   async function translateDocument() {
     if (!ACTIVE) return;
 
@@ -166,7 +201,7 @@
     const groups = chunk(inputs, CONFIG.BATCH_SIZE);
     let offset = 0;
     for (const g of groups) {
-      const out = await geminiTranslate(g, TARGET_LANG);
+      const out = await translateBatch(g, TARGET_LANG);
       WRITING = true;
       try {
         for (let i = 0; i < g.length; i++) {
@@ -198,6 +233,7 @@
 
   async function enable(lang) {
     if (lang) TARGET_LANG = lang;
+    await translationsReady;
     setHtmlLanguage(TARGET_LANG);
     ACTIVE = true;
     await translateDocument();
@@ -208,6 +244,7 @@
 
   async function setLanguage(lang) {
     TARGET_LANG = lang;
+    await translationsReady;
     setHtmlLanguage(TARGET_LANG);
     if (ACTIVE) await translateDocument();
   }
