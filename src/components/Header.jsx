@@ -24,8 +24,11 @@ export default function Header() {
         <Link to="/about">About</Link>
         <Link to="/services">Services</Link>
         <Link to="/investments">Investments</Link>
+        <Link to="/wealth">Wealth Management</Link>
         <Link to="/support">Support</Link>
         <Link to="/careers">Careers</Link>
+        <Link to="/login">Login</Link>
+        <Link to="/signup">Sign Up</Link>
       </nav>
       <button onClick={toggleTranslate}>
         {active ? 'Disable Translate' : 'Enable Translate'}

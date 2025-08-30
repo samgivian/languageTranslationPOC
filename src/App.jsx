@@ -10,6 +10,9 @@ import Services from './pages/Services.jsx';
 import Investments from './pages/Investments.jsx';
 import Support from './pages/Support.jsx';
 import Careers from './pages/Careers.jsx';
+import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
+import WealthManagement from './pages/WealthManagement.jsx';
 
 export default function App() {
   return (
@@ -25,8 +28,11 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/services" element={<Services />} />
           <Route path="/investments" element={<Investments />} />
+          <Route path="/wealth" element={<WealthManagement />} />
           <Route path="/support" element={<Support />} />
           <Route path="/careers" element={<Careers />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </main>
     </Router>

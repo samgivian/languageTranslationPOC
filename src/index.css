@@ -25,3 +25,37 @@ header button {
 main {
   padding: 1rem;
 }
+
+.auth-form {
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+}
+
+.auth-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.auth-form input {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.auth-form button {
+  background: #b30000;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.wealth-section {
+  background: #f0f6ff;
+  border: 1px solid #b30000;
+  padding: 1rem;
+}
