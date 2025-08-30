@@ -4,7 +4,7 @@ This project is a simple bank-style React application with a toggleable translat
 
 ## Features
 - Multiple pages (Home, Accounts, Contact) using React Router.
-- Translation script embedded in `index.html` that can be enabled or disabled via a button.
+- Translation script embedded in `index.html` that can be enabled or disabled via a button and now translates the entire document, not just visible text.
 - All translation API payloads are logged to `payloads.json` via a small Node server.
 
 ## Running
