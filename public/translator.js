@@ -24,6 +24,24 @@
     .then(data => { TRANSLATIONS = data || {}; })
     .catch(() => {});
 
+  const browserCache = {};
+  function getBrowserCache(lang) {
+    if (!browserCache[lang]) {
+      try {
+        browserCache[lang] = JSON.parse(localStorage.getItem('translations_' + lang)) || {};
+      } catch (e) {
+        browserCache[lang] = {};
+      }
+    }
+    return browserCache[lang];
+  }
+
+  function saveBrowserCache(lang) {
+    try {
+      localStorage.setItem('translations_' + lang, JSON.stringify(browserCache[lang]));
+    } catch (e) {}
+  }
+
   function setHtmlLanguage(code) {
     const rtl = ["ar","he","fa","ur"].includes(code);
     const html = document.documentElement;
@@ -145,11 +163,15 @@
     const out = new Array(phrases.length);
     const missing = [];
     const missingIdx = [];
-    const cache = TRANSLATIONS[lang] || {};
+    const localStore = getBrowserCache(lang);
+    let cache = TRANSLATIONS[lang];
+    if (!cache) cache = TRANSLATIONS[lang] = {};
 
     for (let i = 0; i < phrases.length; i++) {
       const p = phrases[i];
-      if (cache[p] != null) {
+      if (localStore[p] != null) {
+        out[i] = localStore[p];
+      } else if (cache[p] != null) {
         out[i] = cache[p];
       } else {
         missing.push(p);
@@ -159,11 +181,14 @@
 
     if (missing.length) {
       const translated = await geminiTranslate(missing, lang);
-      if (!TRANSLATIONS[lang]) TRANSLATIONS[lang] = {};
       for (let i = 0; i < missing.length; i++) {
-        out[missingIdx[i]] = translated[i];
-        TRANSLATIONS[lang][missing[i]] = translated[i];
+        const phrase = missing[i];
+        const val = translated[i];
+        out[missingIdx[i]] = val;
+        cache[phrase] = val;
+        localStore[phrase] = val;
       }
+      saveBrowserCache(lang);
     }
 
     return out;
