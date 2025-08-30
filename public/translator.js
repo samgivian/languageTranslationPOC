@@ -218,6 +218,8 @@
     for (const it of allItems) {
       const src = it.kind === "text" ? it.node.nodeValue : it.value;
       if (it.kind === "text" && seen.get(it.node) === src) continue;
+      // Skip items that are purely numeric so they are not sent for translation
+      if (/^\s*[\d.,]+\s*$/.test(it.value)) continue;
       inputs.push(it.value);
       refs.push(it);
     }
