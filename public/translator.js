@@ -180,10 +180,22 @@
     }
 
     if (missing.length) {
-      const translated = await geminiTranslate(missing, lang);
+      const uniqueMissing = [];
+      const seenMissing = new Set();
+      for (const phrase of missing) {
+        if (!seenMissing.has(phrase)) {
+          seenMissing.add(phrase);
+          uniqueMissing.push(phrase);
+        }
+      }
+      const translated = await geminiTranslate(uniqueMissing, lang);
+      const map = new Map();
+      for (let i = 0; i < uniqueMissing.length; i++) {
+        map.set(uniqueMissing[i], translated[i]);
+      }
       for (let i = 0; i < missing.length; i++) {
         const phrase = missing[i];
-        const val = translated[i];
+        const val = map.get(phrase);
         out[missingIdx[i]] = val;
         cache[phrase] = val;
         sessionStore[phrase] = val;
