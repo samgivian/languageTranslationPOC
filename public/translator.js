@@ -4,7 +4,7 @@
     BATCH_SIZE: 80,
     MAX_RETRIES: 1,
     VISIBLE_ONLY: false,
-    SKIP_SELECTORS: ["[data-no-translate]", ".no-l10n"],
+    SKIP_SELECTORS: ["[data-no-translate]", ".no-l10n", ".p-mask"],
     PSEUDO_ATTRS: ["data-i18n-before", "data-i18n-after"],
     LOG_ENDPOINT: null, // set to '/log' on a server that supports it
     SHOW_UI: true // show built-in language control (button + selector)
@@ -192,10 +192,18 @@
     return out;
   }
 
-  function collectPseudoAttrItems(root, attrNames) {
+  function collectPseudoAttrItems(root, attrNames, skipSelectors) {
     const items = [];
+    let skipSet = null;
+    if (skipSelectors && skipSelectors.length) {
+      skipSet = new Set(root.querySelectorAll(skipSelectors.join(",")));
+    }
     for (const attr of attrNames) {
       root.querySelectorAll("[" + attr + "]").forEach(el => {
+        if (skipSet) {
+          // Skip if this element is inside any skip island
+          for (const island of skipSet) { if (island.contains(el)) return; }
+        }
         const v = el.getAttribute(attr);
         if (v && v.trim()) items.push({ kind: "attr", el, attr, value: v });
       });
@@ -398,7 +406,7 @@
         trailing: raw.match(/\s*$/)[0]
       };
     });
-    const attrItems = collectPseudoAttrItems(document, CONFIG.PSEUDO_ATTRS);
+    const attrItems = collectPseudoAttrItems(document, CONFIG.PSEUDO_ATTRS, CONFIG.SKIP_SELECTORS);
     const allItems = [...textItems, ...attrItems];
     if (!allItems.length) return;
 

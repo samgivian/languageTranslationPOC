@@ -16,6 +16,7 @@ export default function Header() {
         <Link to="/wealth">Wealth Management</Link>
         <Link to="/support">Support</Link>
         <Link to="/bonus">Bonus Offer</Link>
+        <Link to="/open-account">Open Account</Link>
         <Link to="/careers">Careers</Link>
         <Link to="/login">Login</Link>
         <Link to="/signup">Sign Up</Link>

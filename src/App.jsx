@@ -17,6 +17,7 @@ import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import WealthManagement from './pages/WealthManagement.jsx';
 import BonusOffer from './pages/BonusOffer.jsx';
+import OpenAccount from './pages/OpenAccount.jsx';
 
 export default function App() {
   return (
@@ -40,6 +41,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/bonus" element={<BonusOffer />} />
+          <Route path="/open-account" element={<OpenAccount />} />
         </Routes>
       </main>
       <Footer />
