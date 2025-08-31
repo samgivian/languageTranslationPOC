@@ -1,0 +1,8 @@
+node_modules/
+
+# env and local config
+.env
+.env.*
+
+# runtime cache
+data/
